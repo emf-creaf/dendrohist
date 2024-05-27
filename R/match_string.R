@@ -98,6 +98,7 @@ match_string <- function(x, y, ignore.case = T, remove.accent = T, reverse = F, 
     l[[i]] <- df
   }
 
+  if (verbose) cat("\n")
 
   return(l)
 
