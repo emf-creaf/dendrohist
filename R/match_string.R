@@ -67,9 +67,9 @@ match_string <- function(x, y, ignore.case = T, remove.accent = T, reverse = F, 
 
 
   # Search each 'x' in 'y', and the opposite, if 'reverse' is TRUE.
-  l <- list()
+  ll <- list()
   for (i in 1:length(x)) {
-
+print(i)
     # If verbose = T, show progress bar.
     if (verbose) setTxtProgressBar(pb, i)
 
@@ -81,29 +81,27 @@ match_string <- function(x, y, ignore.case = T, remove.accent = T, reverse = F, 
 
     # Main loop.
     for (j in 1:length(y)) {
-
+print(j)
       # First search x in y.
-
-      if (any(q[[j]] > 0)) {
-        k <- which(q != -1)
-        lk <- length(k)
-        df <- rbind(df, data.frame(index = rep(j, lk), location = as.vector(q[k]), reverse = rep(F, lk)))
+      if (q[j] > 0) {
+        df <- rbind(df, data.frame(index = j, location = q[j], reverse = F))
       } else if (reverse) {
 
         # Unsuccessful. Search y in x.
-        rq <- regexpr(y[j], x[i], ignore.case = ignore.case)
-        if (any(rq > 0)) {
-          k <- which(rq != -1)
-          lk <- length(k)
-          df <- rbind(df, data.frame(index = rep(j, lk), location = as.vector(rq[k]), reverse = rep(T, lk)))
+        rq <- regexpr(y[j], x, ignore.case = ignore.case)
+        k <- which(rq > -1)
+        lk <- length(k)
+        if (length(k) > 0) {
+          browser()
+          df <- rbind(df, data.frame(index = rep(k, lk), location = rq[k], reverse = rep(T, lk)))
         }
       }
     }
-    l[[i]] <- df
+    ll[[i]] <- df
   }
 
   if (verbose) cat("\n")
 
-  return(l)
+  return(ll)
 
 }
