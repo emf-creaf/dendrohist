@@ -73,25 +73,29 @@ match_string <- function(x, y, ignore.case = T, remove.accent = T, reverse = F, 
     # If verbose = T, show progress bar.
     if (verbose) setTxtProgressBar(pb, i)
 
+    # First search.
+    q <- regexpr(x[i], y, ignore.case = ignore.case)
+
+    # To save results.
     df <- data.frame(index = numeric(), location = numeric(), reverse = logical())
 
     # Main loop.
     for (j in 1:length(y)) {
 
       # First search x in y.
-      q <- regexpr(x[i], y[j], ignore.case = ignore.case)
-      if (any(q > 0)) {
+
+      if (any(q[[j]] > 0)) {
         k <- which(q != -1)
         lk <- length(k)
         df <- rbind(df, data.frame(index = rep(j, lk), location = as.vector(q[k]), reverse = rep(F, lk)))
       } else if (reverse) {
 
         # Unsuccessful. Search y in x.
-        q <- regexpr(y[j], x[i], ignore.case = ignore.case)
-        if (any(q > 0)) {
-          k <- which(q != -1)
+        rq <- regexpr(y[j], x[i], ignore.case = ignore.case)
+        if (any(rq > 0)) {
+          k <- which(rq != -1)
           lk <- length(k)
-          df <- rbind(df, data.frame(index = rep(j, lk), location = as.vector(q[k]), reverse = rep(T, lk)))
+          df <- rbind(df, data.frame(index = rep(j, lk), location = as.vector(rq[k]), reverse = rep(T, lk)))
         }
       }
     }
