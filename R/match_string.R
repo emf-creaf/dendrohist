@@ -76,7 +76,7 @@ match_string <- function(x, y, ignore.case = T, remove.accent = T, reverse = F, 
     # First search.
     q <- regexpr(x[i], y, ignore.case = ignore.case)
 
-    # Empty data.frame.
+    # Empty initial data.frame.
     df <- data.frame(index = numeric(), reverse = logical())
 
     # Main loop.
