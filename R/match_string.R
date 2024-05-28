@@ -69,31 +69,27 @@ match_string <- function(x, y, ignore.case = T, remove.accent = T, reverse = F, 
   # Search each 'x' in 'y', and the opposite, if 'reverse' is TRUE.
   ll <- list()
   for (i in 1:length(x)) {
-print(i)
+
     # If verbose = T, show progress bar.
     if (verbose) setTxtProgressBar(pb, i)
 
     # First search.
     q <- regexpr(x[i], y, ignore.case = ignore.case)
 
-    # To save results.
-    df <- data.frame(index = numeric(), location = numeric(), reverse = logical())
+    # Empty data.frame.
+    df <- data.frame(index = numeric(), reverse = logical())
 
     # Main loop.
     for (j in 1:length(y)) {
-print(j)
       # First search x in y.
       if (q[j] > 0) {
-        df <- rbind(df, data.frame(index = j, location = q[j], reverse = F))
+        df <- rbind(df, data.frame(index = j, reverse = F))
       } else if (reverse) {
 
         # Unsuccessful. Search y in x.
-        rq <- regexpr(y[j], x, ignore.case = ignore.case)
-        k <- which(rq > -1)
-        lk <- length(k)
-        if (length(k) > 0) {
-          browser()
-          df <- rbind(df, data.frame(index = rep(k, lk), location = rq[k], reverse = rep(T, lk)))
+        rq <- regexpr(y[j], x[i], ignore.case = ignore.case)
+        if (rq > 0) {
+          df <- rbind(df, data.frame(index = j, reverse = T))
         }
       }
     }

@@ -11,22 +11,22 @@ test_that("Matching strings", {
 
   # Search.
   z <- match_string(x, y, ignore.case = F, remove.accent = F, reverse = F)
-  expect_equal(sapply(z, nrow), c(0, 1, 0, 0, 1))
+  testthat::expect_equal(sapply(z, nrow), c(0, 1, 0, 0, 1))
 
   z <- match_string(x, y, ignore.case = F, remove.accent = T, reverse = F)
-  expect_equal(sapply(z, nrow), c(1, 1, 0, 0, 1))
+  testthat::expect_equal(sapply(z, nrow), c(1, 1, 0, 0, 1))
 
   z <- match_string(x, y, ignore.case = F, remove.accent = T, reverse = T)
-  expect_equal(sapply(z, nrow), c(1, 1, 0, 1, 1))
+  testthat::expect_equal(sapply(z, nrow), c(1, 1, 0, 1, 1))
 
   z <- match_string(x, y, ignore.case = T, remove.accent = F, reverse = F)
-  expect_equal(sapply(z, nrow), c(0, 1, 0, 0, 1))
+  testthat::expect_equal(sapply(z, nrow), c(0, 1, 0, 0, 1))
 
   z <- match_string(x, y, ignore.case = T, remove.accent = T, reverse = F)
-  expect_equal(sapply(z, nrow), c(1, 2, 0, 0, 1))
+  testthat::expect_equal(sapply(z, nrow), c(1, 2, 0, 0, 1))
 
   z <- match_string(x, y, ignore.case = T, remove.accent = T, reverse = T)
-  expect_equal(sapply(z, nrow), c(1, 2, 0, 1, 1))
+  testthat::expect_equal(sapply(z, nrow), c(1, 2, 0, 1, 1))
 
 
 
