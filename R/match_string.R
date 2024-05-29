@@ -16,7 +16,9 @@
 #'
 #' @return
 #' A \code{list} object with the same length as \code{x}. Each element of the output consists of a
-#' \code{data.frame} with three columns: \code{index}
+#' \code{data.frame} with two columns: \code{index} and \code{reverse}. The former indicates the index
+#' of the first match of the corresponding 'x' in vector 'y'. The latter shows whether the match was
+#' found in a direct search or a reverse one.
 #'
 #' @details
 #' Simple implementation of the \code{regexpr} function.#'
@@ -73,25 +75,33 @@ match_string <- function(x, y, ignore.case = T, remove.accent = T, reverse = F, 
     # If verbose = T, show progress bar.
     if (verbose) setTxtProgressBar(pb, i)
 
-    # First search.
-    q <- regexpr(x[i], y, ignore.case = ignore.case)
-
     # Empty initial data.frame.
     df <- data.frame(index = numeric(), reverse = logical())
 
-    # Main loop.
-    for (j in 1:length(y)) {
-      # First search x in y.
-      if (q[j] > 0) {
-        df <- rbind(df, data.frame(index = j, reverse = F))
-      } else if (reverse) {
+    # Only if x[i] is valid.
+    if (!is.na(x[i])) {
 
-        # Unsuccessful. Search y in x.
-        rq <- regexpr(y[j], x[i], ignore.case = ignore.case)
-        if (rq > 0) {
-          df <- rbind(df, data.frame(index = j, reverse = T))
+      # First search.
+      q <- regexpr(x[i], y, ignore.case = ignore.case)
+
+      # Main loop.
+      for (j in 1:length(y)) {
+
+        # First search x in y.
+        if (q[j] > 0) {
+          df <- rbind(df, data.frame(index = j, reverse = F))
+        } else if (reverse) {
+
+          # Unsuccessful. Search y in x.
+          if (!is.na(y[j])) {
+            rq <- regexpr(y[j], x[i], ignore.case = ignore.case)
+            if (rq > 0) {
+              df <- rbind(df, data.frame(index = j, reverse = T))
+            }
+          }
         }
       }
+
     }
     ll[[i]] <- df
   }
