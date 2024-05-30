@@ -6,6 +6,8 @@
 #' @param x character vector.
 #' @param trim logical, if set to TRUE all leading and trailing whitespaces are
 #' removed *after* the swap.
+#' @param na.rm logical, if set to TRUE any NA element in 'x' will give a corresponding
+#' NA element in the output. Otherwise, an error will be thrown and computation will stop.
 #'
 #' @details
 #' Input strings are assumed to have a single comma ',' dividing the sentence.
@@ -28,7 +30,7 @@
 #'
 #' # Notice the difference.
 #' print(rbind(x, comma_swap(x, F)))
-comma_swap <- function(x, trim = T) {
+comma_swap <- function(x, trim = T, na.rm = T) {
 
 
   # Checks.
@@ -41,6 +43,7 @@ comma_swap <- function(x, trim = T) {
   y <- character(nx)
   for (i in 1:nx) {
     nc <- nchar(x[i])
+    if (na.rm) if (is.na(nc)) nc <- 0
     if (nc > 2) {
       j <- regexpr(",", x[i])[1]
       if (j == -1) {
