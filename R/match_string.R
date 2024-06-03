@@ -89,7 +89,7 @@ match_string <- function(x, y, ignore.case = T, remove.accent = T, reverse = F, 
       for (j in 1:length(y)) {
 
         # First search x in y.
-        if (!qNA) {
+        if (!qNA[j]) {
           if (q[j] > 0) {
             df <- rbind(df, data.frame(index = j, reverse = F))
           } else if (reverse) {
