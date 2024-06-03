@@ -83,20 +83,23 @@ match_string <- function(x, y, ignore.case = T, remove.accent = T, reverse = F, 
 
       # First search.
       q <- regexpr(x[i], y, ignore.case = ignore.case)
+      qNA <- is.na(q)
 
       # Main loop.
       for (j in 1:length(y)) {
 
         # First search x in y.
-        if (q[j] > 0) {
-          df <- rbind(df, data.frame(index = j, reverse = F))
-        } else if (reverse) {
+        if (!qNA) {
+          if (q[j] > 0) {
+            df <- rbind(df, data.frame(index = j, reverse = F))
+          } else if (reverse) {
 
-          # Unsuccessful. Search y in x.
-          if (!is.na(y[j])) {
-            rq <- regexpr(y[j], x[i], ignore.case = ignore.case)
-            if (rq > 0) {
-              df <- rbind(df, data.frame(index = j, reverse = T))
+            # Unsuccessful. Search y in x.
+            if (!is.na(y[j])) {
+              rq <- regexpr(y[j], x[i], ignore.case = ignore.case)
+              if (rq > 0) {
+                df <- rbind(df, data.frame(index = j, reverse = T))
+              }
             }
           }
         }
