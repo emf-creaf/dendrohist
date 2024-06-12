@@ -5,23 +5,27 @@
 #' If set, search is case-independent, diacritics and tildes are not considered and
 #' a reverse is carried out when there is no match.
 #'
-#' @param x a character vector whose elements containing regular expressions to be matched in \code{y}.
-#' @param y a character vector where matches are sought. If \code{reverse = T} a further search
+#' @param pattern a character vector whose elements containing regular expressions to be matched in \code{y}.
+#' @param text a character vector where matches are sought. If \code{reverse = T} a further search
 #' is performed where the roles of \code{x} and \code{y} are swapped.
-#' @param ignore.case logical, if set to TRUE letter cases are ignored. Default is TRUE.
-#' @param remove.accent logical, if set to TRUE diacritics and tilde letters are substituted
+#' @param match logical, if set to TRUE matches will be carried out with the \link[base]{match} function;
+#' otherwise, \link[base]{regexpr} will be used.
+#' @param ignore_case logical, if set to TRUE letter cases are ignored. Default is TRUE.
+#' @param remove_accent logical, if set to TRUE diacritics and tilde letters are substituted
 #' by the plain versions. Default is FALSE.
 #' @param reverse logical, if set to TRUE search is also carried out in reverse mode. Default is FALSE.
 #' @param verbose logical, if set to TRUE a progress bar is printed. Default is FALSE.
 #'
 #' @return
-#' A \code{list} object with the same length as \code{x}. Each element of the output consists of a
+#' A \code{list} object with the same length as \code{pattern}. Each element of the output consists of a
 #' \code{data.frame} with two columns: \code{index} and \code{reverse}. The former indicates the index
-#' of the first match of the corresponding 'x' in vector 'y'. The latter shows whether the match was
+#' of the first match of the corresponding 'pattern' in vector 'text'. The latter shows whether the match was
 #' found in a direct search or a reverse one.
 #'
 #' @details
-#' Simple implementation of the \code{regexpr} function.#'
+#' Simple implementation of the \link[base]{match} or \link[base]{regexpr} functions.
+#' Notice that the output will be different in either case. See Examples below.
+#'
 #'
 #' @export
 #'
@@ -34,13 +38,14 @@
 #' "le pont d'avignon n'est pas terminé",
 #' "Mom")
 #' print(match_string(x, y))
+#' print(match_string(x, y, match = F))
 #'
-match_string <- function(x, y, ignore.case = T, remove.accent = T, reverse = F, verbose = F) {
+match_string <- function(pattern, text, match = T, ignore_case = T, remove_accent = T, reverse = F, verbose = F) {
 
 
   # Checks.
-  stopifnot("Inputs 'x' and 'y' must be character vectors" =
-              is.vector(x) & is.character(x) & is.vector(y) & is.character(y))
+  stopifnot("Inputs 'pattern' and 'text' must be character vectors" =
+              is.vector(pattern) & is.character(pattern) & is.vector(text) & is.character(text))
 
 
   # If progress is TRUE, print a progress bar.
@@ -56,21 +61,22 @@ match_string <- function(x, y, ignore.case = T, remove.accent = T, reverse = F, 
 
 
   # Case-neutral search.
-  if (ignore.case) {
-    x <- tolower(x)
-    y <- tolower(y)
+  if (ignore_case) {
+    pattern <- tolower(pattern)
+    text <- tolower(text)
   }
+
 
   # No diacritics or tilde, please.
-  if (remove.accent) {
-    x <- replace_accent(x)
-    y <- replace_accent(y)
+  if (remove_accent) {
+    pattern <- replace_accent(pattern)
+    text <- replace_accent(text)
   }
 
 
-  # Search each 'x' in 'y', and the opposite, if 'reverse' is TRUE.
+  # Search each 'pattern' in 'text', and the opposite, if 'reverse' is TRUE.
   ll <- list()
-  for (i in 1:length(x)) {
+  for (i in 1:length(pattern)) {
 
     # If verbose = T, show progress bar.
     if (verbose) setTxtProgressBar(pb, i)
@@ -78,25 +84,25 @@ match_string <- function(x, y, ignore.case = T, remove.accent = T, reverse = F, 
     # Empty initial data.frame.
     df <- data.frame(index = numeric(), reverse = logical())
 
-    # Only if x[i] is valid.
-    if (!is.na(x[i])) {
+    # Only if pattern[i] is valid.
+    if (!is.na(pattern[i])) {
 
       # First search.
-      q <- regexpr(x[i], y, ignore.case = ignore.case)
+      q <- regexpr(pattern[i], text, ignore.case = ignore_case)
       qNA <- is.na(q)
 
       # Main loop.
-      for (j in 1:length(y)) {
+      for (j in 1:length(text)) {
 
-        # First search x in y.
+        # First search pattern in text.
         if (!qNA[j]) {
           if (q[j] > 0) {
             df <- rbind(df, data.frame(index = j, reverse = F))
           } else if (reverse) {
 
-            # Unsuccessful. Search y in x.
-            if (!is.na(y[j])) {
-              rq <- regexpr(y[j], x[i], ignore.case = ignore.case)
+            # Unsuccessful. Search text in pattern.
+            if (!is.na(text[j])) {
+              rq <- regexpr(text[j], pattern[i], ignore.case = ignore_case)
               if (rq > 0) {
                 df <- rbind(df, data.frame(index = j, reverse = T))
               }
