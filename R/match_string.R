@@ -10,8 +10,8 @@
 #' is performed where the roles of \code{x} and \code{y} are swapped.
 #' @param match logical, if set to TRUE matches will be carried out with the \link[base]{match} function;
 #' otherwise, \link[base]{regexpr} will be used.
-#' @param ignore_case logical, if set to TRUE letter cases are ignored. Default is TRUE.
-#' @param remove_accent logical, if set to TRUE diacritics and tilde letters are substituted
+#' @param ignore.case logical, if set to TRUE letter cases are ignored. Default is TRUE.
+#' @param remove.accent logical, if set to TRUE diacritics and tilde letters are substituted
 #' by the plain versions. Default is FALSE.
 #' @param reverse logical, if set to TRUE search is also carried out in reverse mode. Default is FALSE.
 #' @param verbose logical, if set to TRUE a progress bar is printed. Default is FALSE.
@@ -40,7 +40,7 @@
 #' print(match_string(x, y))
 #' print(match_string(x, y, match = F))
 #'
-match_string <- function(pattern, text, match = T, ignore_case = T, remove_accent = T, reverse = F, verbose = F) {
+match_string <- function(pattern, text, ignore.case = T, remove.accent = T, reverse = F, verbose = F) {
 
 
   # Checks.
@@ -61,14 +61,14 @@ match_string <- function(pattern, text, match = T, ignore_case = T, remove_accen
 
 
   # Case-neutral search.
-  if (ignore_case) {
+  if (ignore.case) {
     pattern <- tolower(pattern)
     text <- tolower(text)
   }
 
 
   # No diacritics or tilde, please.
-  if (remove_accent) {
+  if (remove.accent) {
     pattern <- replace_accent(pattern)
     text <- replace_accent(text)
   }
@@ -88,7 +88,7 @@ match_string <- function(pattern, text, match = T, ignore_case = T, remove_accen
     if (!is.na(pattern[i])) {
 
       # First search.
-      q <- regexpr(pattern[i], text, ignore.case = ignore_case)
+      q <- regexpr(pattern[i], text, ignore.case = ignore.case)
       qNA <- is.na(q)
 
       # Main loop.
@@ -102,7 +102,7 @@ match_string <- function(pattern, text, match = T, ignore_case = T, remove_accen
 
             # Unsuccessful. Search text in pattern.
             if (!is.na(text[j])) {
-              rq <- regexpr(text[j], pattern[i], ignore.case = ignore_case)
+              rq <- regexpr(text[j], pattern[i], ignore.case = ignore.case)
               if (rq > 0) {
                 df <- rbind(df, data.frame(index = j, reverse = T))
               }

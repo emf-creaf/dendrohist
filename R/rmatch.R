@@ -13,7 +13,7 @@
 #' vector with the indices of the matches of the corresponding element of 'pattern' in vector 'text'.
 #'
 #' @details
-#' The search when \code{regexpr=F} (the default) is actually implemented with \link[base]{%in%}.
+#' Simple implementation of \link[base]{regexpr} or \link[base]{match}.
 #'
 #' @export
 #'
@@ -40,7 +40,7 @@ rmatch <- function(pattern, text, regexpr = F) {
   if (regexpr) {
     x <- lapply(pattern, function(q) which(regexpr(q, text) != -1))
   } else {
-    x <- lapply(pattern, function(q) which(text %in% q))
+    x <- lapply(pattern, function(q) which(!is.na(match(text, q, incomparables = NA))))
   }
 
 
