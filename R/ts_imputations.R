@@ -14,6 +14,10 @@
 #' @return
 #' A vector with the reconstructed time series.
 #'
+#' @details
+#' Additional details...
+#'
+#'
 #' @export
 #'
 #' @examples
@@ -24,7 +28,9 @@
 #' p <- 0.2
 #' yNA <- y
 #' yNA[sample(length(y), round(length(y)*p))] <- NA
-#'
+#' yrepaired <- ts_imputations(yNA, method = "kalman")
+#' plot(y, type = "l")
+#' points(yrepaired[[1]], type = "l", col = "red")
 #'
 ts_imputations <- function(x, methods = NULL, verbose = T, ...) {
 

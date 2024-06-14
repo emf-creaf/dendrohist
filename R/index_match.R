@@ -1,4 +1,4 @@
-#' Title
+#' Matching
 #'
 #' @param x character vector containing the patterns to be matched in \code{y}.
 #' @param y character vector where matches are sought.
