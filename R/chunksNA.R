@@ -1,6 +1,6 @@
 #' Find chunks of NA values
 #'
-#' @details
+#' @description
 #' Find the indices of chunks of NA values in input vector.
 #'
 #' @param x numeric o character vector
@@ -12,7 +12,7 @@
 #'
 #' If there are no NA's, function returns an empty list.
 #'
-#' @description
+#' @details
 #' A chunk is defined as a group of contiguous NA values.
 #' Single NA values, with no contiguous NA's, are also chunks of length 1.
 #' This function returns a list with as many elements as NA chunks present in the data.

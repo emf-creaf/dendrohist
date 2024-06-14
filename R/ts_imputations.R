@@ -17,6 +17,14 @@
 #' @export
 #'
 #' @examples
+#' data("EuStockMarkets")
+#' y <- as.vector(EuStockMarkets[,1]) # Index DAX
+#'
+#' # Introduce 20% random NAs.
+#' p <- 0.2
+#' yNA <- y
+#' yNA[sample(length(y), round(length(y)*p))] <- NA
+#'
 ts_imputations <- function(x, methods = NULL, verbose = T, ...) {
 
   # Input must be a vector.
