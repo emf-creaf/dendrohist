@@ -25,6 +25,7 @@
 #' yNA <- y
 #' yNA[sample(length(y), round(length(y)*p))] <- NA
 #'
+#'
 ts_imputations <- function(x, methods = NULL, verbose = T, ...) {
 
   # Input must be a vector.
