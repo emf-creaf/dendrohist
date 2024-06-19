@@ -1,28 +1,13 @@
 Package: dendrohist
-Type: Package
-<<<<<<< HEAD
 Title: DENDROHIST data analysis
 Version: 0.1.0
-Author: R. Molowny-Horas
-Maintainer: R. Molowny-Horas <roberto@creaf.uab.es>
-Description: Preprocessing and analysis of data from the DENDROHIST project.
-License: GPL (>= 3)
-=======
-Title: Preprocessing and analyses of data from the DENDROHIST project
-Version: 0.1.0
-Author: R. Molowny-Horas
-Maintainer: R. Molowny-Horas <roberto@creaf.uab.es>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
-License: What license is it under?
->>>>>>> 8fee10496de268b98099c843cb242a5c6f1e20b0
+Authors@R: 
+    person("Roberto", "Molowny-Horas", , "roberto@creaf.uab.es", role = c("aut", "cre"),
+           comment = c(ORCID = "https://orcid.org/0000-0003-2626-6379"))
+Description: Preprocessing and analysis of data from the DENDROHIST
+    project
+License: GPL v3
 Encoding: UTF-8
-LazyData: true
-Suggests: 
-    testthat (>= 3.0.0)
-Config/testthat/edition: 3
+Language: es
+Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.1
-URL: https://github.com/robmh/dendrohist
-BugReports: https://github.com/robmh/dendrohist/issues
-Depends: 
-    R (>= 2.10)
