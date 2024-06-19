@@ -1,7 +1,13 @@
-#' Title
+#' Check CNIG and INE datasets
 #'
-#' @param munic_CNIG
-#' @param munic_INE
+#' @description
+#' This function checks the consistency of municipal names in the CNIG and INE databases that accompany
+#' this package.
+#'
+#' @param munic_CNIG \code{data.frame} containing the 'MUNICIPIOS' dataset from the
+#' *Nomenclator geografico de municipios y entidades de poblacion* at the CNIG web site.
+#' @param munic_INE \code{data.frame} containing the 'diccionario24' dataset from the
+#' INE web site.
 #'
 #' @return
 #'
@@ -29,13 +35,17 @@ check_CNIG_INE <- function(munic_CNIG, munic_INE) {
 
 
   # Substitute curly quotation marks, if any.
+  cat("\n\n Substituting curly quotation marks by straight ones...")
   munic_CNIG$NOMBRE_ACTUAL_nocurly <- curly_quotes(munic_CNIG$NOMBRE_ACTUAL, F)
   munic_INE$NOMBRE_nocurly <- curly_quotes(munic_INE$NOMBRE, F)
+  cat(" Done!\n")
 
 
   # Remove diacritics and tildes.
+  cat("\n Removing diacritics and tildes...")
   munic_CNIG$NOMBRE_ACTUAL_nocurly_notilde <- replace_accent(munic_CNIG$NOMBRE_ACTUAL_nocurly)
   munic_INE$NOMBRE_nocurly_notilde <- replace_accent(munic_INE$NOMBRE_nocurly)
+  cat(" Done!\n")
 
 
   # Transform to lower case letters.
@@ -44,19 +54,23 @@ check_CNIG_INE <- function(munic_CNIG, munic_INE) {
 
 
   # Split names by slash "/".
+  cat("\n Splitting names with slashes '/'...")
   z <- string_split(munic_CNIG$NOMBRE_ACTUAL_nocurly_notilde_tolower, "/")
   munic_CNIG$Nombre_left <- z$left
   munic_CNIG$Nombre_right <- z$right
   z <- string_split(munic_INE$NOMBRE_nocurly_notilde_tolower, "/")
   munic_INE$Nombre_left <- z$left
   munic_INE$Nombre_right <- z$right
+  cat(" Done!\n")
 
 
   # Remove comma and swap.
+  cat("\n Removing commas and swapping words...")
   munic_CNIG$Nombre_left <- comma_swap(munic_CNIG$Nombre_left)
   munic_CNIG$Nombre_right <- comma_swap(munic_CNIG$Nombre_right)
   munic_INE$Nombre_left <- comma_swap(munic_INE$Nombre_left)
   munic_INE$Nombre_right <- comma_swap(munic_INE$Nombre_right)
+  cat(" Done!\n")
 
 
   # Silly white space removed when using apostrophe.
@@ -74,19 +88,18 @@ check_CNIG_INE <- function(munic_CNIG, munic_INE) {
   munic_INE$Nombre_right[i] <- NA
 
 
-  # Cross-checking the municipality names between CNIG and INE.
+  # Cross-checking the municipality names between CNIG and INE. For now only the 'left'
+  # name will be used.
+  cat("\n Cross-checking municipality names...")
   for (i in 1:nrow(munic_INE)) {
     j <- munic_INE$Nombre_left[i] %in% munic_CNIG$Nombre_left
-    if (test_CNIG_INE) {
-      stopifnot("More than one match of INE municipal names in CNIG" = length(j) == 1)
-      stopifnot("No match of INE municipal names in CNIG" = !is.na(j))
-    }
+    stopifnot("More than one match of INE municipal names in CNIG" = length(j) == 1)
+    stopifnot("No match of INE municipal names in CNIG" = !is.na(j))
     j <- munic_CNIG$Nombre_left[i] %in% munic_INE$Nombre_left
-    if (test_CNIG_INE) {
-      stopifnot("More than one match of CNIG municipal names in INE" = length(j) == 1)
-      stopifnot("No match of CNIG municipal names in INE" = !is.na(j))
-    }
+    stopifnot("More than one match of CNIG municipal names in INE" = length(j) == 1)
+    stopifnot("No match of CNIG municipal names in INE" = !is.na(j))
   }
+  cat(" Done!\n\n")
 
-  return(TRUE)
+
 }
