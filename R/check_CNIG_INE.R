@@ -10,19 +10,20 @@
 #' INE web site.
 #'
 #' @return
+#' Messages informing about the processing.
 #'
 #' @details
 #' This function is not exported because it is usually used by the package maintainer only.
 #'
 #' Municipal names have the case lowered, split by slashes into two string, quotation marks
 #' modified and commas removed. During the split, the original name is split into 'left' and 'right'
-#' versions (which will correspond to the Spanish and local language names). Those two versions
+#' versions (which will usually correspond to the Spanish and local language names). Those two versions
 #' can be used for checking, although at this moment only 'left' names are used.
 #'
-#'
-#'
-#'
 #' @examples
+#' data(munic_CNIG)
+#' data(munic_INE)
+#' check_CNIG_INE(munic_CNIG, munic_INE)
 check_CNIG_INE <- function(munic_CNIG, munic_INE) {
 
   # First checks.
