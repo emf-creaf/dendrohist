@@ -6,7 +6,7 @@ The objectives of the project are the following (see URL of the project above):
 
 > *"DENDROHIST aims to provide long-term critical climate information for the Iberian Mediterranean region using tree-ring and historical records. The integration of these two independent paleoclimate archives will  allow for a multidisciplinary approach to estimate the full range of past climate variability at different temporal and spatial scales, as well as the detailed occurrence and recurrence frequencies of extreme climate events."*
 
-The achievement of these objectives involve, among other things, the acquisition, preprocessing and analyses of different datasets from varying origins. Some of those datasets are publicly available (see below), whereas some others are not. With these ideas in mind we have set out to design and implement a series of functions, written in R and collected into a so-called R package, that can simplify the tasks ahead. 
+The achievement of these objectives involve, among other things, the acquisition, pre-processing and analyses of different datasets from varying origins. Some of those datasets are publicly available (see below), whereas some others are not. With these ideas in mind we have set out to design and implement a series of functions, written in R and collected into a so-called R package, that can simplify the tasks ahead. 
 Those tasks for which functions in this package are suited are the following:.
 
 1. Processing of time series of rain data from Spanish meteorological stations.
