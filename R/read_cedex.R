@@ -63,13 +63,13 @@ read_cedex <- function(x, type = NULL, station_label = NULL) {
 
 
     # Names of months in Spanish.
-    data(mes_abr)
+    data("mes_abr", package = "dendrohist")
 
 
     # The third row in the file must contain the names of the months, starting at October.
     # Months are in Spanish.
     stopifnot("Columns in monthly data file are not correct" =
-                identical(y <- fr(x, 3)[-c(1:2)], c(substring(roll(mes_abr, 3), 1, 3), "Total")))
+                identical(fr(x, 3)[-c(1:2)], c(substring(roll(mes_abr, 3), 1, 3), "Total")))
 
 
     # Line 5 contains a straight line made up of dashes.
@@ -111,7 +111,7 @@ read_cedex <- function(x, type = NULL, station_label = NULL) {
 
 
     # Names of months in Spanish.
-    mon <- dendrohist::roll(month.name, 3)
+    mon <- roll(month.name, 3)
 
 
     # Fetching monthly data for station x.

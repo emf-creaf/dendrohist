@@ -9,5 +9,9 @@ Description: Preprocessing and analysis of data from the DENDROHIST
 License: GPL v3
 Encoding: UTF-8
 Language: es
+Lazydata: FALSE
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.1
+Depends: 
+    R (>= 2.10)
+LazyData: true
