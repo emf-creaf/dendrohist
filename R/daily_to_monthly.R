@@ -10,8 +10,8 @@
 #' determine the columns in \code{x}. Default value is "afliq".
 #'
 #' @return
-#' A \code{data.frame} with the monthly averages and totals of the "Height" and
-#' "Flow" columns, respectively.
+#' A \code{data.frame} with columns "Station", "Date", "Height_mean", "Flow_mean" and "Flow",
+#' corresponding to the station name, date, mean monthly height and flow, and total monthly flow.
 #'
 #' @details
 #' Total monthly flow for February is calculated accounting for a leap year, if required.
@@ -52,11 +52,12 @@ daily_to_monthly <- function(x, table = NULL) {
       dplyr::group_by(Station, year, month) |>
       dplyr::mutate(days = ifelse(is_leap_year(Date),
                                   days_per_month2[month], days_per_month[month])) |>
-      dplyr::summarize(Flow = sum(Flow, na.rm = T) / sum(!is.na(Flow)) * max(days),
-                       Height = mean(Height, na.rm = T), .groups = "keep") |>
+      dplyr::summarize(Flow_mean = mean(Flow, na.rm = T),
+                       Flow = mean(Flow, na.rm = T) * max(days),
+                       Height_mean = mean(Height, na.rm = T), .groups = "keep") |>
       dplyr::ungroup() |>
       dplyr::mutate(Date = as.Date(paste0(year, "-", month, "-01"), format = "%Y-%m-%d")) |>
-      dplyr::select(Station, Date, Height, Flow)
+      dplyr::select(Station, Date, Height_mean, Flow_mean, Flow)
   }
 
 

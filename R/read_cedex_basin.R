@@ -39,7 +39,7 @@ read_cedex_basin <- function(table = NULL, str_url = NULL) {
     stopifnot("Input 'table' must be a single string" = is.character(table) & length(table) == 1)
     table <- tolower(table)
     z <- c("afliq", "mensual_a")
-    stopifnot("Wrong 'table' value" = any(table %in% x))
+    stopifnot("Wrong 'table' value" = any(table %in% z))
   }
 
 
@@ -61,6 +61,7 @@ read_cedex_basin <- function(table = NULL, str_url = NULL) {
   } else if (table == "mensual_a") {
     colnames(x) <- c("Station", "anomes", "Height", "Flow", "Streamflow", "Flow_max",
                      "Height_max", "Flow_max_day", "Flow_min", "Height_min", "Flow_min_day", "Orig_data")
+    x <- set_colmode(x, c(rep("character", 2), rep("numeric", 10)))
     x$Date <- with(x, as.Date(paste0(substr(anomes, 1, 4), "-", substr(anomes, 5, 6), "-01")))
     x$anomes <- NULL
     x <- x[, c("Station", "Date", colnames(x)[-c(1, 12)])]
