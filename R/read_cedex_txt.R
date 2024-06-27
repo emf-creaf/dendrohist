@@ -20,18 +20,15 @@
 #'
 #' @examples
 #' x <- "https://ceh.cedex.es/anuarioaforos/temp/resultado8187.txt"
-#' df <- read_cedex(x, type = "daily", station_label = "9020")
+#' df <- read_cedex(x, type = "daily")
 
-read_cedex_txt <- function(x, type = NULL, station_label = NULL) {
+read_cedex_txt <- function(x, type = NULL) {
 
 
   # Checks.
   stopifnot("'type' must be set to 'daily' or 'monthly'" = !is.null(type))
   type <- tolower(type)
   stopifnot("Value of 'type' must be 'daily' or 'monthly'" = type %in% c("daily", "monthly"))
-  if (!is.null(station_label)) {
-    stopifnot("Input 'station_label' should be a string" = is.character(station_label))
-  }
 
 
   # Little functions to be used below.
@@ -51,12 +48,9 @@ read_cedex_txt <- function(x, type = NULL, station_label = NULL) {
     stopifnot("Fifth row in daily data file should contain only dashes '-'" = fd(fr(x, 5)))
 
 
-    # Length of 6th row must also be 4. Optionally, check out the label in the first column.
+    # Length of 6th row must also be 4.
     y <- fr(x, 6)
     stopifnot("There must be 4 columns in daily data file" = length(y) == 4)
-    if (!is.null(station_label)) {
-      stopifnot("Sixth line in data file does not start with name of the station" = y[1] == station_label)
-    }
 
 
   } else {
@@ -76,12 +70,9 @@ read_cedex_txt <- function(x, type = NULL, station_label = NULL) {
     stopifnot("Fifth row in monthly data file should contain only dashes '-'" = fd(fr(x, 5)))
 
 
-    # Length of 6th row must be 16. Optionally, check out the label in the first column.
+    # Length of 6th row must be 16.
     y <- fr(x, 6)
     stopifnot("There must be 16 columns in monthly data file" = length(y) == 16)
-    if (!is.null(station_label)) {
-      stopifnot("Sixth line in data file does not start with name of the station" = y[1] == station_label)
-    }
 
   }
 
