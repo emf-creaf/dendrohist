@@ -29,23 +29,21 @@ month_to_number <- function(x, to_lower = T, abbreviated = T) {
 
 
   # Lower-case text.
-  y <- month.name
   if (to_lower) {
-    y <- tolower(y)
     x <- tolower(x)
+    month.name <- tolower(month.name)
   }
 
 
   # Loop up names of months.
-  i <-  match(x, y)
+  i <-  match(x, month.name)
   if (abbreviated) {
     j <- which(is.na(i))
 
     # Is necessary to look up the abbreviated name?
     if (length(j) > 0) {
-      y <- month.abb
-      if (to_lower) y <- tolower(y)
-      k <- match(x[j], y)
+      if (to_lower) month.abb <- tolower(month.abb)
+      k <- match(x[j], month.abb)
       i[j] <- k
     }
   }

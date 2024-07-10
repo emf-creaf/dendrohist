@@ -13,12 +13,15 @@
 #' Ebro basin.
 #' Notice that, internally, \code{read_cedex_basin} will paste \code{table} and \code{str_url} together,
 #' so any missing slash at the end of \code{str_url} will raise an error.
+#' @param English logical, if set to TRUE the names of the columns of the output \code{data.frame} are
+#' translated into English. If set to FALSE (default), Spanish names (as in the original files) are kept.
 #'
 #' @return
 #' A \code{data.frame}. Column labels vary depending on the value of "table":
 #'
-#' * \code{table = "afliq"}: "Station", "Date", "Height" and "Flow".
-#' * \code{table = "mensual_a"}: "Station", "Date", "Height", "Flow", "Streamflow", "Flow_max", "Height_max", "Flow_max_day", "Flow_min", "Height_min", "Flow_min_day", "Orig_data").
+#' * \code{table = "afliq"}: in Spanish, "indroea", "fecha", "altura" and "caudal"; in English, "Station", "Date", "Height" and "Flow".
+#' * \code{table = "mensual_a"}: in Spanish, "indroea", "anomes", "hmedmes", "qmedmes", "apormedmes", "qcmes", #' "hcmes", "dia_cmes", "qnmes", "hnmes", "dia_nmes", "orig_dato_id";
+#' in English, "Station", "Date", "Height", "Flow", "Streamflow", "Flow_max", "Height_max", "Flow_max_day", "Flow_min", "Height_min", "Flow_min_day", "Orig_data").
 #'
 #' @details
 #' To see a description of the files to retrieve see
@@ -29,7 +32,7 @@
 #'
 #' @examples
 #' x <- read_cedex_basin()
-read_cedex_basin <- function(table = NULL, str_url = NULL) {
+read_cedex_basin <- function(table = NULL, str_url = NULL, English = F) {
 
 
   # Checks.
@@ -55,17 +58,16 @@ read_cedex_basin <- function(table = NULL, str_url = NULL) {
 
   # Change column names and format.
   if (table ==  "afliq") {
-    colnames(x) <- c("Station", "Date", "Height", "Flow")
     x <- set_colmode(x, c("character", "character", "numeric", "numeric"))
-    x$Date <- as.Date(x$Date, format = "%d/%m/%Y")
+    x$fecha <- as.Date(x$fecha, format = "%d/%m/%Y")
+    if (English) colnames(x) <- c("Station", "Date", "Height", "Flow")
   } else if (table == "mensual_a") {
-    colnames(x) <- c("Station", "anomes", "Height", "Flow", "Streamflow", "Flow_max",
-                     "Height_max", "Flow_max_day", "Flow_min", "Height_min", "Flow_min_day", "Orig_data")
+    if (English) colnames(x) <- c("Station", "anomes", "Height", "Flow", "Streamflow", "Flow_max",
+                                  "Height_max", "Flow_max_day", "Flow_min", "Height_min", "Flow_min_day", "Orig_data")
     x <- set_colmode(x, c(rep("character", 2), rep("numeric", 10)))
     x$Date <- with(x, as.Date(paste0(substr(anomes, 1, 4), "-", substr(anomes, 5, 6), "-01")))
     x$anomes <- NULL
     x <- x[, c("Station", "Date", colnames(x)[-c(1, 12)])]
-
   }
 
 
