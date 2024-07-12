@@ -4,7 +4,7 @@
 \alias{read_cedex_basin}
 \title{Read Spanish basin data from the \emph{cedex} site.}
 \usage{
-read_cedex_basin(table = NULL, str_url = NULL)
+read_cedex_basin(table = NULL, str_url = NULL, English = F)
 }
 \arguments{
 \item{table}{\code{character} with the name of the file to retrieve from the
@@ -15,12 +15,16 @@ read_cedex_basin(table = NULL, str_url = NULL)
 Ebro basin.
 Notice that, internally, \code{read_cedex_basin} will paste \code{table} and \code{str_url} together,
 so any missing slash at the end of \code{str_url} will raise an error.}
+
+\item{English}{logical, if set to TRUE the names of the columns of the output \code{data.frame} are
+translated into English. If set to FALSE (default), Spanish names (as in the original files) are kept.}
 }
 \value{
 A \code{data.frame}. Column labels vary depending on the value of "table":
 \itemize{
-\item \code{table = "afliq"}: "Station", "Date", "Height" and "Flow".
-\item \code{table = "mensual_a"}: "Station", "Date", "Height", "Flow", "Streamflow", "Flow_max", "Height_max", "Flow_max_day", "Flow_min", "Height_min", "Flow_min_day", "Orig_data").
+\item \code{table = "afliq"}: in Spanish, "indroea", "fecha", "altura" and "caudal"; in English, "Station", "Date", "Height" and "Flow".
+\item \code{table = "mensual_a"}: in Spanish, "indroea", "anomes", "hmedmes", "qmedmes", "apormedmes", "qcmes", #' "hcmes", "dia_cmes", "qnmes", "hnmes", "dia_nmes", "orig_dato_id";
+in English, "Station", "Date", "Height", "Flow", "Streamflow", "Flow_max", "Height_max", "Flow_max_day", "Flow_min", "Height_min", "Flow_min_day", "Orig_data").
 }
 }
 \description{

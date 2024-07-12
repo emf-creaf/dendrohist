@@ -6,16 +6,19 @@
 #'
 #' @param x character, it must be in the format GGGMMSS. A minus or plus sign is allowed, i.e. +GGGMMSS or
 #' -GGGMMSS are accepted (or +/-MMSS, +/-MSS, +/-SS, +/-S).
-#' @param test_range logical, if set to TRUE the range of the coordinates is tested and a warning
-#' message is issued if they are outside reasonable values. See Details below.
+#' @param test_range logical, if set to TRUE a warning
+#' message is issued if the range of the coordinates (either seconds, minutes or degrees) are outside reasonable values.
+#' See Details below.
 #'
 #' @details
 #' The coordinates in the input \code{x} must be GGGMMSS, +GGGMMSS or -GGGMMSS.
 #' The allowed range for seconds and minutes is [-60, 60].
-#' However, we allow for degrees to be in the range [-360, 360], not the usual [-180, 180].
+#' However, we allow for degrees to be in the range [-360, 360], not the usual [-180, 180] for longitude or
+#' [-90, 90] for latitude.
 #'
 #' @return
-#' The coordinate as a decimal number. If the
+#' The coordinate as a decimal number.
+#'
 #' @export
 #'
 #' @examples
