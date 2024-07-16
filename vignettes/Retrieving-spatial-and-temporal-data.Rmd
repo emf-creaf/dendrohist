@@ -1,0 +1,97 @@
+---
+title: "Retrieving spatial and temporal data"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Retrieving-spatial-and-temporal-data}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+### CEDEX time series
+
+Time series of streamflow data from the basins of the most important Spanish rivers are available at the web site of the "Centro de Estudios Hidrográficos" (https://ceh.cedex.es/web/default.htm), which belongs to the "Centro de Estudios y Experimentación de Obras Públicas", an institution of the Spanish Government. Although below we will show how to obtain those datasets quickly with appropriate R functions, one can carry out many (though not all) of those tasks by hand by clicking on "Anuario aforos" on that web, then on "Acceso de Anuario de Aforos 2019-2020", next on "Descarga de Datos Organismo de Cuenca" and finally selecting a basin.
+
+To load CEDEX datasets and preprocess those time series we have implemented the package $dendrohist$.
+
+```{r setup}
+library(dendrohist)
+```
+
+### How to retrieve CEDEX data
+
+Time series can be retrieved as spatial $sf$ objects with function $read\_cedex\_basin.R$.
+
+Although there are many files available at the 
+
+
+```{r setup}
+x <- read_cedex_basin("estaf",cs = "wgs84", verbose = F)
+```
+
+
+
+```{r setup}
+x <- read_cedex_basin("estaf", cs = "wgs84", verbose = F)
+```
+
+
+
+To show all stations in Spanish rivers on a map we just have to select all 10 basins. That is easily done by setting $basin = "all"$ or by saying nothing, since it is the default value.
+
+```{r setup}
+z <- read_cedex_basin(cs = "wgs84", verbose = F)
+
+# install.packages("rnaturalearthhires")
+library(rnaturalearthhires)
+m <- ne_countries(scale = 10, country = "spain")
+ggplot() + 
+  geom_sf(data = m, aes(), color="white", fill="#7f7f7f", alpha=1/4) +
+  geom_sf(data = z, aes(color = cuenca)) +
+  xlim(-10, 4) + ylim(36, 44)
+```
+
+
+There are stations outside the Spanish national limits.
+
+```{r}
+library(sf)
+p <- st_filter(z, m)
+i <- which(!(z$indroea %in% p$indroea))
+p_out <- z[i, ]
+ggplot() + 
+  geom_sf(data = m, aes(), color="white", fill="#7f7f7f", alpha=1/4) +
+  geom_sf(data = p_out, aes(color = cuenca)) +
+  geom_sf_text(data = p_out, aes(label = lugar, angle = 90)) +
+  xlim(-10, 4) + ylim(36, 44)
+```
+
+Although most of those locations are so close to the border that could be considered a good match nevertheless, there are two stations (9159 and 9204, named "Huarte" and "Matauco" respectively) that are located well into France but that should not be there.
+
+```{r}
+z_out <- z[which(z$lugar %in% c("HUARTE", "MATAUCO")), ]
+```
+
+Strange names since they are in Catalonia. Let me check their UTM coordinates.
+
+```{r}
+library(terra)
+pp <- list('utm30' = read_cedex_basin(cs = "utm30", verbose = T),
+           'etrs89' = read_cedex_basin(cs = "etrs89", verbose = T),
+           'wgs84' = read_cedex_basin(cs = "wgs84", verbose = T),
+           'ed50' = read_cedex_basin(cs = "ed50", verbose = T))
+dxy <- matrix(NA, 4, 4)
+for (i in 1:4) {
+  for (j in 1:4) {
+    p2 <- st_transform(pp[[i]], st_crs(pp[[j]]))
+    dxy[i, j] <- max(diag(st_distance(pp[[j]], p2)))
+  }
+}
+```
+

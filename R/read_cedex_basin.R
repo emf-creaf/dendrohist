@@ -14,7 +14,7 @@
 #' Notice that, internally, \code{read_cedex_basin} will paste \code{table} and \code{str_url} together,
 #' so any missing slash at the end of \code{str_url} will raise an error.
 #' @param cs \code{character} indicating the coordinate system of choice. Values can be
-#' "UTM", "UTM30", "WGS84", "ED50" or "ETRS89" in lower or upper case letters (e.g. "wgs84" is valid,
+#' "UTM", "UTM30", "WGS84" (default), "ED50" or "ETRS89" in lower or upper case letters (e.g. "wgs84" is valid,
 #' as is "Wgs84").
 #' @param verbose \code{logical}, if set to TRUE progress messages are printed on screen.
 #'
@@ -32,12 +32,15 @@
 #' Mercator UTM 30 with datum ETRS89. Finally, cs = "ED50" and "WGS84" are longitude-latitude
 #' system with those datums.
 #'
+#' The \code{encoding} argument of the \code{read.csv2} function is set to "latin1" in order to
+#' correctly read diacritics and tildes.
+#'
 #' @export
 #'
 #' @examples
 #' # Read afliq.csv data
 #' x <- read_cedex_basin(cs = "wgs84")
-read_cedex_basin <- function(table = NULL, str_url = NULL, cs = NULL, verbose = T) {
+read_cedex_basin <- function(table = "estaf", basin = "all", cs = "wgs84", verbose = T) {
 
 
   # Checks.
@@ -49,74 +52,97 @@ read_cedex_basin <- function(table = NULL, str_url = NULL, cs = NULL, verbose = 
     z <- c("afliq", "mensual_a", "estaf")
     stopifnot("Wrong 'table' value" = any(table %in% z))
   }
-  if (!is.null(cs)) {
-    cs <- tolower(cs)
-    stopifnot("Input 'cs' must be equal to 'UTM', 'UTM30', 'WGS84', 'ED50' or 'ETRS89'" =
-                any(cs %in% c("utm", "utm30", "wgs84", "ed50", "etrs89")))
-  }
+
+  basin <- tolower(basin)
+  all_basins <- c("galicia", "cantabrico", "duero", "ebro", "guadalquivir",
+                 "guadiana", "jucar", "miño", "mino", "segura", "tajo")
+  stopifnot("Wrong basin name(s)" = all(basin %in% c(all_basins, "all")))
+  if (any("all" %in% basin)) basin <- all_basins
+  basin <- basin[which(basin != "mino")]
+
+  cs <- tolower(cs)
+  cs <- match.arg(cs, c("utm", "utm30", "wgs84", "ed50", "etrs89"))
 
 
-  # URL by default, corresponding to the Ebro basin.
-  if (is.null(str_url)) {
-    str_url <- "https://ceh-flumen64.cedex.es/anuarioaforos//anuario-2019-2020//EBRO//"
-  }
+  # URL for datasets.
+  str_url <- "https://ceh-flumen64.cedex.es//anuarioaforos//anuario-2019-2020//"
 
 
-  # Get data.
-  if (verbose) cat(paste0("\n Reading ", table, ".csv data...\n\n"))
-  a <- read.csv2(paste0(str_url, table, ".csv"))
+  # Reads data for all basins
+  z <- NULL
+  for (j in 1:length(basin)) {
+    if (verbose) cat(paste0("\n ---> Basin = ", basin[j], " <---\n\n"))
+
+    ba <- switch(basin[j],
+                    galicia = "GALICIA%20COSTA",
+                    cantabrico = "CANTABRICO",
+                    duero = "DUERO",
+                    ebro = "EBRO",
+                    guadalquivir = "GUADALQUIVIR",
+                    guadiana = "GUADIANA",
+                    jucar = "JUCAR",
+                    miño = "MIÑO-SIL",
+                    segura = "SEGURA",
+                    tajo = "TAJO")
 
 
-  # Change column names and format.
-  if (table ==  "afliq") {
-    a <- set_colmode(a, c("character", "character", "numeric", "numeric"))
-    a$fecha <- as.Date(a$fecha, format = "%d/%m/%Y")
-
-  } else if (table == "mensual_a") {
-    a <- set_colmode(a, c(rep("character", 2), rep("numeric", 10)))
-    a$fecha <- with(a, as.Date(paste0(substr(anomes, 1, 4), "-", substr(anomes, 5, 6), "-01")))
-
-  }
-
-  if (table == "estaf.csv" | !is.null(cs)) {
-    if (verbose) cat(paste0("\n Reading estaf.csv data...\n\n"))
-    b <- read.csv2(paste0(str_url, "estaf.csv"))
-    b <- set_colmode(b, c(rep("character", 3), rep("numeric", 19), rep("character", 5), rep("numeric", 2), "character"))
-    if (is.null(cs)) a <- b
-
-  }
+    # Get data.
+    if (verbose) cat(paste0("\n Reading ", table, ".csv data...\n\n"))
+    a <- read.csv2(paste0(str_url, ba, "//", table, ".csv"))
 
 
-  # Coordinates.
-  if (table != "estaf") {
-    if (!is.null(cs)) {
-      if (verbose) {
-        z <- switch(cs,
-                    utm = "local UTM zone",
-                    utm30 = "UTM 30 zone",
-                    wgs84 = "WGS84",
-                    ed50 = "ED50",
-                    etrs89 = "ETRS89")
-        cat(paste0("\n Adding coordinates in ", z, " reference system to ", table, "...\n\n"))
-      }
+    # Change column names and format.
+    if (table ==  "afliq") {
+      a <- set_colmode(a, c("character", "character", "numeric", "numeric"))
+      a$fecha <- as.Date(a$fecha, format = "%d/%m/%Y")
 
-      b <- select_coord(b, cs)
-      i <- match(a$indroea, b$indroea)
-      a$x <- b$x[i]
-      a$y <- b$y[i]
+    } else if (table == "mensual_a") {
+      a <- set_colmode(a, c(rep("character", 2), rep("numeric", 10)))
+      a$fecha <- with(a, as.Date(paste0(substr(anomes, 1, 4), "-", substr(anomes, 5, 6), "-01")))
+
+    } else if (table == "estaf") {
+      a <- read.csv2(paste0(str_url, ba, "//estaf.csv"), encoding = "latin1")
+      a <- set_colmode(a, c(rep("character", 3), rep("numeric", 19), rep("character", 5), rep("numeric", 2), "character"))
+
     }
-  }
+
+
+    # Input is not "estaf".
+    if (table != "estaf") {
+      b <- read.csv2(paste0(str_url, "estaf.csv"), encoding = "latin1")
+      b <- set_colmode(b, c(rep("character", 3), rep("numeric", 19), rep("character", 5), rep("numeric", 2), "character"))
+
+    } else b <- a
+
+
+    # Coordinates.
+    b <- select_coord(b, cs)
+    i <- match(a$indroea, b$indroea)
+    a$x <- b$x[i]
+    a$y <- b$y[i]
 
 
   # sf object.
-  a <- a |> sf::st_as_sf(coords = c("x", "y"))
-  if (cs == "utm30") {
-    sf::st_crs(a) <- switch(cs,
-                            utm30 = 32630,
-                            etrs89 = 25830,
-                            wgs84 = 4326,
-                            ed50 = 4230)
+    a <- a |> sf::st_as_sf(coords = c("x", "y"))
+    if (cs != "utm") {
+      sf::st_crs(a) <- switch(cs,
+                              utm30 = 32630,
+                              etrs89 = 25830,
+                              wgs84 = 4326,
+                              ed50 = 4230)
+    }
+    a$cuenca <- basin[j]
+
+
+    # Add rows.
+    z <- rbind(z, a)
+
   }
 
-  return(a)
+
+  # Remove trailing/leading blanks from the "lugar" field.
+  z$lugar <- trimws(z$lugar)
+
+
+  return(z)
 }

@@ -29,8 +29,8 @@ select_coord <- function(df, cs) {
     df$x <- as.numeric(df[, paste0("x", m)])
     df$y <- as.numeric(df[, paste0("y", m)])
   } else {
-    df$x <- sapply(as.character(df[, paste0("long", m)]), function(z) extract_gms(as.character(z)))
-    df$y <- sapply(as.character(df[, paste0("lat", m)]), function(z) extract_gms(as.character(z)))
+    df$x <- sapply(format(df[, paste0("long", m)], scientific = F, trim = T), function(z) extract_gms(z))
+    df$y <- sapply(format(df[, paste0("lat", m)], scientific = F, trim = T), function(z) extract_gms(z))
   }
 
 
