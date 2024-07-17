@@ -4,28 +4,26 @@
 \alias{read_cedex_basin}
 \title{Read Spanish basin data from the \emph{cedex} site.}
 \usage{
-read_cedex_basin(table = NULL, str_url = NULL, English = F)
+read_cedex_basin(table = "estaf", basin = "all", cs = "wgs84", verbose = T)
 }
 \arguments{
 \item{table}{\code{character} with the name of the file to retrieve from the
 \emph{cedex} site, without extension. If not given, the default value is "afliq".}
 
+\item{cs}{\code{character} indicating the coordinate system of choice. Values can be
+"UTM", "UTM30", "WGS84" (default), "ED50" or "ETRS89" in lower or upper case letters (e.g. "wgs84" is valid,
+as is "Wgs84").}
+
+\item{verbose}{\code{logical}, if set to TRUE progress messages are printed on screen.}
+
 \item{str_url}{string with the \code{url} of the \emph{cedex} site. Value by default is
-"https://ceh-flumen64.cedex.es/anuarioaforos//anuario-2019-2020/EBRO/", corresponding to the
+"https://ceh-flumen64.cedex.es/anuarioaforos//anuario-2019-2020//EBRO//", corresponding to the
 Ebro basin.
 Notice that, internally, \code{read_cedex_basin} will paste \code{table} and \code{str_url} together,
 so any missing slash at the end of \code{str_url} will raise an error.}
-
-\item{English}{logical, if set to TRUE the names of the columns of the output \code{data.frame} are
-translated into English. If set to FALSE (default), Spanish names (as in the original files) are kept.}
 }
 \value{
-A \code{data.frame}. Column labels vary depending on the value of "table":
-\itemize{
-\item \code{table = "afliq"}: in Spanish, "indroea", "fecha", "altura" and "caudal"; in English, "Station", "Date", "Height" and "Flow".
-\item \code{table = "mensual_a"}: in Spanish, "indroea", "anomes", "hmedmes", "qmedmes", "apormedmes", "qcmes", #' "hcmes", "dia_cmes", "qnmes", "hnmes", "dia_nmes", "orig_dato_id";
-in English, "Station", "Date", "Height", "Flow", "Streamflow", "Flow_max", "Height_max", "Flow_max_day", "Flow_min", "Height_min", "Flow_min_day", "Orig_data").
-}
+A spatial \code{sf} object with a EPSG coordinate reference system (unless cs = "utm").
 }
 \description{
 \code{read_cedex_basin} retrieves time series datasets and statistics for
@@ -36,7 +34,16 @@ de Obras Públicas (CEDEX).
 To see a description of the files to retrieve see
 "https://ceh.cedex.es/anuarioaforos/demarcaciones.asp" and go to the basin you want
 to get data for.
+Regarding coordinates, cs = "UTM" indicates local UTM coordinates, which may be a problem
+if the sites are located on both sides of the UTM demarcation line, so we do not recommend it.
+cs = "UTM30" actually means Mercator UTM 30 North with datum WGS84, whereas ETRS89 implies
+Mercator UTM 30 with datum ETRS89. Finally, cs = "ED50" and "WGS84" are longitude-latitude
+system with those datums.
+
+The \code{encoding} argument of the \code{read.csv2} function is set to "latin1" in order to
+correctly read diacritics and tildes.
 }
 \examples{
-x <- read_cedex_basin()
+# Read afliq.csv data
+x <- read_cedex_basin(cs = "wgs84")
 }

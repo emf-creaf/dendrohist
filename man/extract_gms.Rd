@@ -4,17 +4,18 @@
 \alias{extract_gms}
 \title{Convert GGMMSS coordinate to decimal number.}
 \usage{
-extract_gms(x, test_range = T)
+extract_gms(x, test_range = T, verbose = T)
 }
 \arguments{
 \item{x}{character, it must be in the format GGGMMSS. A minus or plus sign is allowed, i.e. +GGGMMSS or
 -GGGMMSS are accepted (or +/-MMSS, +/-MSS, +/-SS, +/-S).}
 
-\item{test_range}{logical, if set to TRUE the range of the coordinates is tested and a warning
-message is issued if they are outside reasonable values. See Details below.}
+\item{test_range}{logical, if set to TRUE a warning
+message is issued if the range of the coordinates (either seconds, minutes or degrees) are outside reasonable values.
+See Details below.}
 }
 \value{
-The coordinate as a decimal number. If the
+The coordinate as a decimal number.
 }
 \description{
 \code{extract_gms} extracts the degrees, minutes and seconds from the input GGMMSS and converts it
@@ -23,7 +24,8 @@ to a decimal number.
 \details{
 The coordinates in the input \code{x} must be GGGMMSS, +GGGMMSS or -GGGMMSS.
 The allowed range for seconds and minutes is \link{-60, 60}.
-However, we allow for degrees to be in the range \link{-360, 360}, not the usual \link{-180, 180}.
+However, we allow for degrees to be in the range \link{-360, 360}, not the usual \link{-180, 180} for longitude or
+\link{-90, 90} for latitude.
 }
 \examples{
 # Result is 34.36556

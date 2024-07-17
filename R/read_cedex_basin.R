@@ -45,7 +45,7 @@ read_cedex_basin <- function(table = "estaf", basin = "all", cs = "wgs84", verbo
 
   # Checks.
   if (is.null(table)) {
-    table <- "afliq"
+    table <- "estaf"
   } else {
     stopifnot("Input 'table' must be a single string" = is.character(table) & length(table) == 1)
     table <- tolower(table)
@@ -124,19 +124,25 @@ read_cedex_basin <- function(table = "estaf", basin = "all", cs = "wgs84", verbo
 
   # sf object.
     a <- a |> sf::st_as_sf(coords = c("x", "y"))
-    if (cs != "utm") {
-      sf::st_crs(a) <- switch(cs,
-                              utm30 = 32630,
-                              etrs89 = 25830,
-                              wgs84 = 4326,
-                              ed50 = 4230)
-    }
-    a$cuenca <- basin[j]
+
+
+    # Field "Cuenca" with name of basin.
+    a$Cuenca <- basin[j]
 
 
     # Add rows.
     z <- rbind(z, a)
 
+  }
+
+
+  # Coordinate reference system.
+  if (cs != "utm") {
+    sf::st_crs(z) <- switch(cs,
+                            utm30 = 32630,
+                            etrs89 = 25830,
+                            wgs84 = 4326,
+                            ed50 = 4230)
   }
 
 

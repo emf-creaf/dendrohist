@@ -78,10 +78,9 @@ Although most of those locations are so close to the border that could be consid
 z_out <- z[which(z$lugar %in% c("HUARTE", "MATAUCO")), ]
 ```
 
-Strange names since they are in Catalonia. Let me check their UTM coordinates.
+Strange names since they are in Catalonia! Let me check their UTM coordinates.
 
 ```{r}
-library(terra)
 pp <- list('utm30' = read_cedex_basin(cs = "utm30", verbose = T),
            'etrs89' = read_cedex_basin(cs = "etrs89", verbose = T),
            'wgs84' = read_cedex_basin(cs = "wgs84", verbose = T),
@@ -90,6 +89,7 @@ dxy <- matrix(NA, 4, 4)
 for (i in 1:4) {
   for (j in 1:4) {
     p2 <- st_transform(pp[[i]], st_crs(pp[[j]]))
+    plot(diag(st_distance(pp[[j]], p2)), main = c(i,j))
     dxy[i, j] <- max(diag(st_distance(pp[[j]], p2)))
   }
 }
