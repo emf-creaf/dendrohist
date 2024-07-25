@@ -115,6 +115,10 @@ read_cedex_basin <- function(table = "estaf", basin = "all", cs = "wgs84", verbo
     } else b <- a
 
 
+    # Coordinates correction (email from Carmen Mirta Dimas Suárez, July 17th, 2024).
+    b <- correction_coordinates(b)
+
+
     # Coordinates.
     b <- select_coord(b, cs)
     i <- match(a$indroea, b$indroea)
