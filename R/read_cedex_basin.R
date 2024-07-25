@@ -107,9 +107,9 @@ read_cedex_basin <- function(table = "estaf", basin = "all", cs = "wgs84", verbo
     }
 
 
-    # Input is not "estaf".
+    # Input is not "estaf", but we need "estaf" nevertheless to retrieve coordinates.
     if (table != "estaf") {
-      b <- read.csv2(paste0(str_url, "estaf.csv"), encoding = "latin1")
+      b <- read.csv2(paste0(str_url, ba, "//estaf.csv"), encoding = "latin1")
       b <- set_colmode(b, c(rep("character", 3), rep("numeric", 19), rep("character", 5), rep("numeric", 2), "character"))
 
     } else b <- a
@@ -126,7 +126,7 @@ read_cedex_basin <- function(table = "estaf", basin = "all", cs = "wgs84", verbo
     a <- a |> sf::st_as_sf(coords = c("x", "y"))
 
 
-    # Field "Cuenca" with name of basin.
+    # Add field "Cuenca" with name of basin.
     a$Cuenca <- basin[j]
 
 
@@ -137,17 +137,7 @@ read_cedex_basin <- function(table = "estaf", basin = "all", cs = "wgs84", verbo
 
 
   # Coordinate reference system.
-  if (cs != "utm") {
-    sf::st_crs(z) <- switch(cs,
-                            utm30 = 32630,
-                            etrs89 = 25830,
-                            wgs84 = 4326,
-                            ed50 = 4230)
-  }
-
-
-  # Remove trailing/leading blanks from the "lugar" field.
-  z$lugar <- trimws(z$lugar)
+  if (cs != "utm") sf::st_crs(z) <- epsg_ceh(cs)
 
 
   return(z)

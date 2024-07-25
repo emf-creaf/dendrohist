@@ -4,7 +4,7 @@
 \alias{extract_gms}
 \title{Convert GGMMSS coordinate to decimal number.}
 \usage{
-extract_gms(x, test_range = T, verbose = T)
+extract_gms(x, test_range = T)
 }
 \arguments{
 \item{x}{character, it must be in the format GGGMMSS. A minus or plus sign is allowed, i.e. +GGGMMSS or

@@ -60,7 +60,7 @@ extract_gms <- function(x, test_range = T) {
 
     # Test range.
     if (test_range) {
-      if (abs(s) > 60) cat(paste0("\n Range of seconds is not in [-60, 60] in ", xx, "\n\n"))
+      if (abs(s) > 60) message(paste0("\n Range of seconds is not in [-60, 60] in ", xx, "\n\n"))
     }
   }
 
@@ -86,7 +86,7 @@ extract_gms <- function(x, test_range = T) {
 
     # Test range.
     if (test_range) {
-      if (abs(m) > 60) cat(paste0("\n Range of minutes is not in [-60, 60] in ", xx, "\n\n"))
+      if (abs(m) > 60) message(paste0("\n Range of minutes is not in [-60, 60] in ", xx, "\n\n"))
     }
 
   } else {
@@ -102,7 +102,7 @@ extract_gms <- function(x, test_range = T) {
   }
 
   if (test_range) {
-    if (abs(g) > 360) cat(paste0("\n Range of degrees is not in [-360, 360] in ", xx, "\n\n"))
+    if (abs(g) > 360) message(paste0("\n Range of degrees is not in [-360, 360] in ", xx, "\n\n"))
   }
 
 

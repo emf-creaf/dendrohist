@@ -20,40 +20,54 @@ Time series of streamflow data from the basins of the most important Spanish riv
 
 To load CEDEX datasets and preprocess those time series we have implemented the package $dendrohist$.
 
-```{r setup}
+#### Packages
+
+For this analysis we will be using several R packages.
+
+```{r}
 library(dendrohist)
+library(rnaturalearth)
+library(rnaturalearthhires)
+library(ggplot2)
+library(sf)
 ```
+
+<br>
 
 ### How to retrieve CEDEX data
 
 Time series can be retrieved as spatial $sf$ objects with function $read\_cedex\_basin.R$.
 
-Although there are many files available at the 
+Different data sets can be selected by setting the $\bf{table}$ parameter:
 
+* $\bf{table = "estaf"}$: some general information about the basin and the exact coordinates of gauging stations;
+* $\bf{table = "afliq"}$: daily data from the gauging stations along the river;
+* $\bf{table = "mensual\_a"}$: monthly data from the gauging stations along the river.
 
-```{r setup}
-x <- read_cedex_basin("estaf",cs = "wgs84", verbose = F)
+Further options will be implemented in the future.
+
+Stations can be selected one by one or several at a time. For example, we may retrieve data for the Duero and Ebro basins as follows:
+
+```{r}
+z <- read_cedex_basin(table = "afliq", basin = c("duero", "ebro"), cs = "wgs84", verbose = F)
 ```
 
+<br>
+
+The resulting output lists the daily data for the Duero and Ebro stations as a spatial "sf" object. There are 10 basins to choose from, which can be introduced as a character vector. However, to retrieve all gauging stations at once we can set $basin = "all"$, which is also its default value.
 
 
-```{r setup}
-x <- read_cedex_basin("estaf", cs = "wgs84", verbose = F)
-```
+show all stations in Spanish rivers on a map we just have to select all 10 basins. That is easily done by setting $basin = "all"$ or by saying nothing, since it is the default value.
 
 
 
-To show all stations in Spanish rivers on a map we just have to select all 10 basins. That is easily done by setting $basin = "all"$ or by saying nothing, since it is the default value.
 
-```{r setup}
+```{r}
 z <- read_cedex_basin(cs = "wgs84", verbose = F)
-
-# install.packages("rnaturalearthhires")
-library(rnaturalearthhires)
 m <- ne_countries(scale = 10, country = "spain")
 ggplot() + 
   geom_sf(data = m, aes(), color="white", fill="#7f7f7f", alpha=1/4) +
-  geom_sf(data = z, aes(color = cuenca)) +
+  geom_sf(data = z, aes(color = Cuenca)) +
   xlim(-10, 4) + ylim(36, 44)
 ```
 
@@ -61,7 +75,7 @@ ggplot() +
 There are stations outside the Spanish national limits.
 
 ```{r}
-library(sf)
+
 p <- st_filter(z, m)
 i <- which(!(z$indroea %in% p$indroea))
 p_out <- z[i, ]
