@@ -2,13 +2,38 @@
 % Please edit documentation in R/select_coord.R
 \name{select_coord}
 \alias{select_coord}
-\title{Title}
+\title{Extract coordinates from \code{data.frame}}
 \usage{
 select_coord(df, cs)
 }
 \arguments{
-\item{cs}{}
+\item{df}{\code{data.frame} from CEDEX-CEH}
+
+\item{cs}{\code{character} string indicating which coordinates to select.
+It can be "utm", "utm30", "wgs84", "ed50" or "etrs89", in upper/lower case letters.}
+}
+\value{
+The input \code{data.frame} "df" with two columns X-Y containing the extracted coordinates.
 }
 \description{
-Title
+\code{select_coord} extract x-y coordinates from input \code{data.frame}.
+Columns are named according to the "efact.csv" file from the CEDEX web site.
+}
+\examples{
+# This is not an actual CEDEX-CEH "estaf.csv" gauging station file.
+df <- data.frame(xutm = round(runif(5)*10000), yutm = round(runif(5)*10000),
+xutm30 = round(runif(5)*10000), yutm30 = round(runif(5)*10000),
+xetrs89 = round(runif(5)*10000), yetrs89 = round(runif(5)*10000),
+long = paste0(paste0("0", sample(2:6, 5)), paste0(sample(20:55, 5), paste0(sample(20:55, 5)))),
+lat = paste0(paste0(sample(38:44, 5)), paste0(sample(20:55, 5), paste0(sample(20:55, 5)))),
+longwgs84 = paste0(paste0("0", sample(2:6, 5)), paste0(sample(20:55, 5), paste0(sample(20:55, 5)))),
+latwgs84 = paste0(paste0(sample(38:44, 5)), paste0(sample(20:55, 5), paste0(sample(20:55, 5)))))
+
+# Different outputs depending on the "cs" option.
+select_coord(df, "utm")
+select_coord(df, "utm30")
+select_coord(df, "etrs89")
+select_coord(df, "ed50")
+select_coord(df, "wgs84")
+
 }

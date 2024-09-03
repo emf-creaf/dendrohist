@@ -1,13 +1,19 @@
-#' Title
+#' Correction to some lat-lon coordinates
 #'
-#' @param x
+#' @param df data.frame with a column named "indroea" and two other columns
+#' for latitud and longitude.
+#'
+#' @description
+#' A correction is introduced to some lat-long coordinates in some basins
 #'
 #' @return
+#' The input data.frame with corrected coordinates, if needed.
+#'
 #' @export
 #'
 #' @details
-#' A correction to coordinates, email from Carmen Mirta Dimas Suárez (CEH) on July 17th, 2024.
-#'
+#' A correction to coordinates, email from Carmen Mirta Dimas Suárez (CEH)
+#' on July 17th, 2024. The correction applies to stations 3179, 3191, 3275 and 5107 only.
 #'
 #' @examples
 #' df <- data.frame(indroea = c("3179", "3000"), lat = 1:2, long = 3:4)

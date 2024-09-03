@@ -27,7 +27,7 @@ epsg_ceh <- function(x) {
   stopifnot("Input must be a vector with at least a single element" = is.vector(x))
   stopifnot("Input must be of character type" = is.character(x))
   x <- tolower(x)
-  stopifnot("Wrong input" = all(x %in% c("utm30", "etrs89", "wgs84", "ed50")))
+  stopifnot("Wrong input" = any(c("utm30", "etrs89", "wgs84", "ed50") %in% x))
 
   # Choose EPSG code CEH data.
   z <- sapply(x, function(y) switch(y,

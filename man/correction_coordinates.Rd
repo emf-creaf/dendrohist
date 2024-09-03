@@ -2,18 +2,23 @@
 % Please edit documentation in R/correction_coordinates.R
 \name{correction_coordinates}
 \alias{correction_coordinates}
-\title{Title}
+\title{Correction to some lat-lon coordinates}
 \usage{
 correction_coordinates(df)
 }
 \arguments{
-\item{x}{}
+\item{df}{data.frame with a column named "indroea" and two other columns
+for latitud and longitude.}
+}
+\value{
+The input data.frame with corrected coordinates, if needed.
 }
 \description{
-Title
+A correction is introduced to some lat-long coordinates in some basins
 }
 \details{
-A correction to coordinates, email from Carmen Mirta Dimas Suárez (CEH) on July 17th, 2024.
+A correction to coordinates, email from Carmen Mirta Dimas Suárez (CEH)
+on July 17th, 2024. The correction applies to stations 3179, 3191, 3275 and 5107 only.
 }
 \examples{
 df <- data.frame(indroea = c("3179", "3000"), lat = 1:2, long = 3:4)
