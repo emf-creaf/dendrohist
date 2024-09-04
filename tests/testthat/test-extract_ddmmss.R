@@ -37,7 +37,7 @@ test_that("Decimal degrees", {
 
 
   expect_error(extract_ddmmss(c(4, 6)))
-  expect_error(extract_ddmmss(c("3", "6")))
+  expect_equal(extract_ddmmss(c("3", "6")), c(3, 6)/3600)
 
   expect_error(extract_ddmmss("-33333333"))
 
