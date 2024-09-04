@@ -20,10 +20,6 @@
 #' must be a plus or minus sign. That is, "+1234556" (123 degrees, 45 minutes and 56 seconds) and "-1234567" are fine,
 #' but not "+12345534", "+01234556", "-1234556" or "+01234556", for example.
 #'
-#' In addition, string with fewer than 5 characters are not allowed either. That means that coordinates without degrees
-#' must have a zero, i.e. "03456", which corresponds to 0 degrees, 34 minutes and 56 seconds is accepted.
-#' Also is accepted "00004", corresponding to 4 seconds, but not "04".
-#'
 #' @return
 #' The coordinate as a decimal number.
 #'
@@ -45,34 +41,34 @@ extract_ddmmss <- function(x, test_range = T) {
   stopifnot("Input 'x' must be a vector of character type" = is.character(x) & is.vector(x))
   nc <- nchar(x)
   stopifnot("There are empty strings" = all(nc > 0))
-  stopifnot("There are strings with more than 8 characters" = all(nc <= 8))
+  stopifnot("There are non-numeric strings" = all(!is.na(suppressWarnings(as.numeric(x)))))
+
+
+  # Save and remove the sign, if present.
   nx <- length(x)
-  xx <- x
-
-
-  # Save and remove the sign.
   i <- substr(x, 1, 1)
   sign <- rep(1, nx)
   sign[i == "-"] <- -1
-
-
-  # Once removed, the string cannot have fewer than 5 characters.
   i <- which(i %in% c("-", "+"))
   x[i] <- substring(x[i], 2)
-  stopifnot("There are strings with fewer than 5 characters" = all(nchar(x) >= 5))
 
 
-  # Loop.
-  # ss <- mm <- dd <- numeric(nx)
+  # Once removed, the string must have at least 1 character and a maximum of 7.
+  nc <- nchar(x)
+  stopifnot("Strings cannot have more than 7 characters (i.e. 7 digits and a '-' or '+' sign)" = all(nc <= 7))
 
 
   # Extract values from strings.
-  nc <- nchar(x)
   ss <- as.numeric(substring(x, nc-1))
   x <- substr(x, 1, nc-2)
   nc <- nc-2
   mm <- as.numeric(substring(x, nc-1))
   dd <- as.numeric(substr(x, 1, nc-2))
+
+
+  # NA's are substituted by 00.
+  mm[is.na(mm)] <- 0
+  dd[is.na(dd)] <- 0
 
 
   # Test range.

@@ -1,23 +1,32 @@
 #' Make ddmmss/dddmmss strings from numeric coordinates
 #'
 #' @description
-#' \code{build_ddmmss} builds coordinate strings of the type +/-ddmmss, or +/-dddmmss from coordinates in numeric form,
+#' \code{build_ddmmss} builds character string with coordinates of the type +/-ddmmss, or +/-dddmmss
+#' from coordinates in numeric form,
 #' where dd/ddd, mm and ss stand for degrees, minutes and seconds, respectively.
 #'
 #' @param x \code{numeric} numeric vector containing the coordinates to convert into string.
 #'
 #' @return
-#' A \code{character} vector of the same length as \code{x}. Strings have a minimum length of 5 characters without
-#' the sign, not including the sign, and a maximum length of 8 characters, including the sign.
+#' A \code{character} vector of the same length as \code{x}.
+#' Strings will have a minimum length of 6 characters ("ddmmss" case), without
+#' the sign, and a maximum length of 8 characters, including the sign ("-dddmmss" case).
 #'
 #' @details
-#' If the input is negative, the output will also be negative. That would be equivalent to a -ddmmss/-dddmmsss case.
+#' If the input is negative, the output will also be negative.
+#' That would be equivalent to a -ddmmss/-dddmmsss case.
+#'
+#' The output string will always have 6 or 7 characters (ddmmss or dddmmss).
+#' If the input number is negative, the output will then have 7 ot 8 characters
+#' (-ddmmss or -dddmmss).
 #'
 #' @export
 #'
 #' @examples
 #' x <- c("-25005", "2560032", "25000")
-#' y <- sapply(x, function(z) extract_ddmmss(z))
+#' y <- extract_ddmmss(x)
+#'
+#' # Next is exactly as 'x', but with an extra zero for degrees.
 #' z <- build_ddmmss(y)
 build_ddmmss <- function(x) {
 
