@@ -1,6 +1,6 @@
 #' Check internal and external consistency of the Spanish historical catastrofic flood database.
 #'
-#' @param flood
+#' @param flood database of flood events.
 #' @param test_CNIG_INE if set to TRUE the CNIG and INE databases are checked for consistency.
 #' It is left as an option for future developments, but users should use the default value of FALSE.
 #'

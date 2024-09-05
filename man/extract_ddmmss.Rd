@@ -30,10 +30,6 @@ However, we allow for degrees to be in the range \link{-360, 360}, not the usual
 Strings with more than 8 characters are not allowed. In those strings with 8 characters, the leftmost character
 must be a plus or minus sign. That is, "+1234556" (123 degrees, 45 minutes and 56 seconds) and "-1234567" are fine,
 but not "+12345534", "+01234556", "-1234556" or "+01234556", for example.
-
-In addition, string with fewer than 5 characters are not allowed either. That means that coordinates without degrees
-must have a zero, i.e. "03456", which corresponds to 0 degrees, 34 minutes and 56 seconds is accepted.
-Also is accepted "00004", corresponding to 4 seconds, but not "04".
 }
 \examples{
 # Result is 34.36556
