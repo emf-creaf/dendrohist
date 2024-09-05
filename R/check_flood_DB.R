@@ -15,7 +15,7 @@
 #' @export
 #'
 #' @examples
-check_flood_BD <- function(flood, verbose = T) {
+check_flood_DB <- function(flood, verbose = T) {
 
 
   # First check.
