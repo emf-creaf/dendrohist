@@ -27,9 +27,9 @@ fetch_stations <- function(str_url = NULL, rs = "WGS84") {
     nx <- nchar(xc)
     ny <- nchar(yc)
 
-    s <- extract_gms(xc, "s")
-    m <- extract_gms(xc, "m")
-    g <- extract_gms(xc, "g")
+    s <- extract_ddmmss(xc, "s")
+    m <- extract_ddmmss(xc, "m")
+    g <- extract_ddmmss(xc, "g")
 
 
 
