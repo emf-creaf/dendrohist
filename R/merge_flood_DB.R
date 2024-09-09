@@ -15,22 +15,22 @@
 merge_flood_DB <- function(...) {
 
 
-  # Checks.
+  # Several checks.
   db <- list(...)
-  stopifnot("Inputs must be of class 'data.frame'" = all(sapply(db, function(x) inherits(x, "data.frame"))))
 
+    # Inputs must be data.frames
+    stopifnot("Inputs must be of class 'data.frame'" = all(sapply(db, function(x) inherits(x, "data.frame"))))
 
-  # Number of columns must match.
-  stopifnot("Number of columns in input data.frames must be the same" = length(unique(sapply(db, ncol))) == 1)
+    # Number of columns must match.
+    stopifnot("Number of columns in input data.frames must be the same" = DescTools::AllIdentical(lapply(db, colnames)))
 
-  # Name of columns must match.
-  colnam <- sapply(db, colnames)
-  i <- apply(colnam, 1, function(x) length(unique(x)))
+    # Name of columns must match.
+    stopifnot("Name of columns do not match" = DescTools::AllIdentical(lapply(db, colnames)))
 
+    # Format of columns must match.
+    colfor <- lapply(db, function(x) sapply(1:ncol(x), function(j) class(x[, j])))
+    stopifnot("Format of columns do not match" = DescTools::AllIdentical(colfor))
 
-  # Format of columns must match.
-  colfor <- sapply(db, function(x) sapply(1:ncol(x), function(j) class(x[, j])))
-  j <- apply(colfor, 1, function(x) length(unique(x)))
 
 
 browser()
