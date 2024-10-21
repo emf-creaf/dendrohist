@@ -1,0 +1,9 @@
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+data.R
+make_DESCRIPTION.R
+munic_INE.R
+munic_CNIG.R
+inst/doc

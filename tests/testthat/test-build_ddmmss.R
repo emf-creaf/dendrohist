@@ -1,4 +1,4 @@
-test_that("multiplication works", {
+test_that("Convert ddmmss to coordinates and back", {
 
   # Needed below.
   f <- function(x) ifelse(x < 10, paste0("0", x), as.character(x))

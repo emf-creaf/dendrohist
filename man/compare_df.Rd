@@ -4,17 +4,23 @@
 \alias{compare_df}
 \title{Compare two or more data.frames}
 \usage{
-compare_df(...)
+compare_df(..., index_duplicated = FALSE)
 }
 \arguments{
 \item{...}{comma-separated 'data.frames' to be compared.}
+
+\item{index_duplicated}{logical, if set to TRUE the output will consist of the indices
+of the duplicated rows.}
 }
 \value{
 'TRUE' if the comparisons were successful; FALSE if they were not.
+If \code{index_duplicated} is TRUE the output will instead be a vector containing
+the indices of the rows that are duplicated.
 }
 \description{
 \code{data.frames} are checked whether their column numbers, column names
-and column formats all match.
+and column formats all match. It also checks for duplicated rows (there shouldn't
+be any).
 }
 \details{
 The content of the columns do not need to match; that is, inputs can have
@@ -22,22 +28,20 @@ different number of rows and contain different numbers/characters/anything.
 
 Messsages are printed on screen showing the progress of the comparison:
 \itemize{
-\item Inputs are checked for "data.framness". If any fails a 'return(FALSE)'
-is executed.
+\item Inputs are checked for "data.frameness".
 \item Column numbers must match.
-\item Column names must match one by one. Obviously, if the previous conditions fails,
-this will also fail.
+\item Column names must match one by one, if previous conditions succeeds.
 \item Column format must match one by one.
 }
 }
 \examples{
-df1 <- as.data.frame(matrix(100, 20, 5))
+df1 <- as.data.frame(matrix(runif(100), 20, 5))
 colnames(df1) <- letters[1:5]
-df2 <- as.data.frame(matrix(80, 20, 4))
+df2 <- as.data.frame(matrix(runif(80), 20, 4))
 colnames(df2) <- letters[2:5]
 
-# Success.
-compare_df(df1, df1)
+# Success in all but duplicated rows.
+compare_df(df1, df1, df1)
 
 # Failure.
 compare_df(df1, df2)

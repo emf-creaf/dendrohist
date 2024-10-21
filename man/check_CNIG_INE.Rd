@@ -4,7 +4,7 @@
 \alias{check_CNIG_INE}
 \title{Check CNIG and INE datasets}
 \usage{
-check_CNIG_INE(munic_CNIG, munic_INE)
+check_CNIG_INE(munic_CNIG, munic_INE, verbose = T)
 }
 \arguments{
 \item{munic_CNIG}{\code{data.frame} containing the 'MUNICIPIOS' dataset from the
@@ -14,7 +14,7 @@ check_CNIG_INE(munic_CNIG, munic_INE)
 INE web site.}
 }
 \value{
-Messages informing about the processing.
+Informative messages.
 }
 \description{
 This function checks the consistency of municipal names in the CNIG and INE databases that accompany

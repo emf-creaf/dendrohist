@@ -30,7 +30,7 @@
 #'
 #' # Same without warning.
 #' extract_ggmmss("-4342156", F)
-extract_ggmmss <- function(x, test_range = T) {
+extract_ggmmss_copia <- function(x, test_range = T) {
 
 
   # Checks.
