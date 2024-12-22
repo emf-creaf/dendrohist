@@ -27,7 +27,7 @@
 #' x[56] <- NaN
 #' x[78:79] <- NA
 #' x[100] <- NA
-#' chunksNA <- chunksNA(x)
+#' xx <- chunksNA(x)
 #'
 #' # Extract those parts of x that do NOT have NA.
 #' y <- ifelse(is.na(x), 1, NA)
@@ -37,7 +37,7 @@
 #' # Are these chunks stochastic? If so, they must agree with a theoretical
 #' # probability density function.
 #' # Load 20000 first digits of pi from table as a vector.
-#' x <- read.csv("http://oeis.org/A000796/b000796.txt", header=FALSE, sep=" ")[,2]
+#' x <- read.csv("http://oeis.org/A000796/b000796.txt", header = FALSE, sep = " ")[,2]
 #' nx <- sum(x == 9)
 #' x[x == 9] <- NA
 #' y <- chunksNA(x)
@@ -53,45 +53,43 @@
 #'
 chunksNA <- function(x) {
 
+  # Initial checks.
   stopifnot("Input 'x' must be a vector" = is.vector(x))
 
-
-  # First find NA's.
   xNA <- is.na(x)
-  xnonNA <- !xNA
+  sum_xNA <- sum(xNA)
+  length_x <- length(x)
+  stopifnot("There are no NAs in input vector" = sum_xNA > 0)
+  stopifnot("There must be at least one non-NA element in x" = sum_xNA < length_x)
 
 
   # If length(x) = 1 no need to go through the algorithm below (which needs length(x) > 1).
-  y <- list()
-  if (length(x) == 1) {
-    if (xNA) y[[1]] <- 1
-    return(y)
-  }
+  if (length_x == 1) return(ifelse(xNA, list(1), list()))
 
 
-  # If there are no NA's, return an empty list.
-  if (sum(xNA) == 0) return(y)
-
-
-  # Initialize counter. If first point contains NA, initialize list y.
+  # Initialize counter. If first element contains NA, initialize list y.
   icount <- 0
+  indices <- list()
   if (xNA[1]) {
-    y[[1]] <- 1
+    indices[[1]] <- 1
     icount <- icount + 1
   }
 
 
-  # Main algorithm.
-  for (i in 2:length(x)) {
+  # Main algorithm to find NA chunks.
+  xnonNA <- !xNA
+  for (i in 2:length_x) {
     if (xNA[i]) {
       if (xnonNA[i-1]) {
         icount <- icount + 1
-        y[[icount]] <- i
+        indices[[icount]] <- i
       } else {
-        y[[icount]] <- c(y[[icount]], i)
+        indices[[icount]] <- c(indices[[icount]], i)
       }
     }
   }
 
-  return(y)
+
+  return(indices)
 }
+
