@@ -33,7 +33,7 @@ x[30:33] <- NA
 x[56] <- NaN
 x[78:79] <- NA
 x[100] <- NA
-chunksNA <- chunksNA(x)
+xx <- chunksNA(x)
 
 # Extract those parts of x that do NOT have NA.
 y <- ifelse(is.na(x), 1, NA)
@@ -43,7 +43,7 @@ chunksnotNA <- chunksNA(y)
 # Are these chunks stochastic? If so, they must agree with a theoretical
 # probability density function.
 # Load 20000 first digits of pi from table as a vector.
-x <- read.csv("http://oeis.org/A000796/b000796.txt", header=FALSE, sep=" ")[,2]
+x <- read.csv("http://oeis.org/A000796/b000796.txt", header = FALSE, sep = " ")[,2]
 nx <- sum(x == 9)
 x[x == 9] <- NA
 y <- chunksNA(x)
