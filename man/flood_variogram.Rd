@@ -6,11 +6,13 @@
 \usage{
 flood_variogram(
   x,
+  formula = log(num_events) ~ 1,
   selection = "all",
-  cutoff = 100,
+  cutoff = 200,
   width = 1,
   model_type = "Sph",
   nboot = 100,
+  PR = FALSE,
   verbose = TRUE
 )
 }

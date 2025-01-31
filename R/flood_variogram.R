@@ -10,8 +10,9 @@
 #' @export
 #'
 #' @examples
-flood_variogram <- function(x, formula = log(num_events) ~ 1, selection = "all", cutoff = 100,
-                            width = 1, model_type = "Sph", nboot = 100, verbose = TRUE) {
+flood_variogram <- function(x, formula = log(num_events) ~ 1, selection = "all", cutoff = 200,
+                            width = 1, model_type = "Sph", nboot = 100, PR = FALSE,
+                            verbose = TRUE) {
 
   # Make sure all strings are lower case.
   selection <- tolower(selection)
@@ -43,14 +44,12 @@ flood_variogram <- function(x, formula = log(num_events) ~ 1, selection = "all",
   df_events$num_events <- sapply(id, function(y) sum(x$ID == y))
 
 
-  df_events <- df_events |> dplyr::filter(num_events < 5)
-
   # Transform to 'sf' object.
   df_events <- df_events |> sf::st_as_sf(coords = c("long", "lat"), crs = sf::st_crs("EPSG:4326"))
 
 
   # Calculate variogram. Response variable is log-transformed.
-  df.vgm <- gstat::variogram(formula, data = df_events, width = width)
+  df.vgm <- gstat::variogram(formula, data = df_events, width = width, PR = PR)
 
 
   # We fit a functional form to the variogram. 'cutoff' makes sure that too distance calculations are not used.
@@ -77,10 +76,11 @@ flood_variogram <- function(x, formula = log(num_events) ~ 1, selection = "all",
         boot_sample <- df_events[sample(j, replace = TRUE), ]
 
         # Compute the experimental variogram for the bootstrapped sample
-        vgram_boot <- gstat::variogram(formula, data = boot_sample, width = width)
+        vgram_boot <- gstat::variogram(formula, data = boot_sample, width = width, PR = PR)
 
         # Fit the variogram model
-        fit_boot <- tryCatch(gstat::fit.variogram(vgram_boot, model = gstat::vgm(model_type)),
+        fit_boot <- tryCatch(gstat::fit.variogram(vgram_boot[vgram_boot$dist < cutoff, ],
+                                                  model = gstat::vgm(model_type)),
                              error = function(e) e,
                              warning = function(w) w)
         if (!("error" %in% class(fit_boot)) & !("warning" %in% class(fit_boot))) {
