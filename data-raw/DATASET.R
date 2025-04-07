@@ -6,7 +6,7 @@ muni <- read.table(".\\data-raw\\MUNICIPIOS.csv", sep = ";", dec = ",", header =
 # Instituto Nacional de Estadística (INE) database (https://www.ine.es/daco/daco42/codmun/diccionario24.xlsx).
 dicc <- readxl::read_excel(".\\data-raw\\diccionario24.xlsx", skip = 1, col_names = T) |>
   as.data.frame()
-prov <- readxl::read_excel(".\\data-raw\\Comunidades Autónomas y provincias.xlsx", col_names = T) |>  as.data.frame()
+prov <- readxl::read_excel(".\\data-raw\\Comunidades Autonomas y provincias.xlsx", col_names = T) |>  as.data.frame()
 
 
 
